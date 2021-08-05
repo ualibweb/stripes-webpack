@@ -59,6 +59,7 @@ module.exports = {
       // overriding it here silences the complaint. STRWEB-12
       ['@babel/plugin-proposal-class-properties', { 'loose': true }],
       ['@babel/plugin-proposal-private-methods', { 'loose': true }],
+      ['@babel/plugin-proposal-private-property-in-object', { 'loose': true }],
       '@babel/plugin-proposal-export-namespace-from',
       '@babel/plugin-proposal-function-sent',
       '@babel/plugin-proposal-numeric-separator',
