@@ -1,6 +1,7 @@
 # Change history for stripes-webpack
 
-## 1.3.1 IN PROGRESS
+## [1.3.1](https://github.com/folio-org/stripes-webpack/tree/v1.3.1) (2021-08-20)
+[Full Changelog](https://github.com/folio-org/stripes-webpack/compare/v1.3.0...v1.3.1)
 
 * Add `loose` to `plugin-proposal-private-property-in-object`. Fixes STRWEB-21.
 
