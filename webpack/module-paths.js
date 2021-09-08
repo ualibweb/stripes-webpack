@@ -17,6 +17,7 @@ function generateStripesAlias(moduleName) {
   const workspaceModule = path.join(path.resolve(), '..', 'node_modules', moduleName);
   const platformModule = path.join(path.resolve(), 'node_modules', moduleName);
   const coreModule = path.join(__dirname, '..', 'node_modules', moduleName);
+  const self = path.resolve();
 
   if (tryResolve(workspaceModule)) {
     alias = workspaceModule;
@@ -24,6 +25,8 @@ function generateStripesAlias(moduleName) {
     alias = platformModule;
   } else if (tryResolve(coreModule)) {
     alias = coreModule;
+  } else if (tryResolve(self)) {
+    alias = self;
   } else {
     throw new StripesBuildError(`generateStripesAlias: Unable to locate a resolvable alias for ${moduleName} module`);
   }
