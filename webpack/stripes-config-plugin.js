@@ -33,6 +33,7 @@ module.exports = class StripesConfigPlugin {
     if (!hooks) {
       hooks = {
         beforeWrite: new SyncHook(['config']),
+        afterWrite: new SyncHook(['config']),
       };
 
       stripesConfigPluginHooksMap.set(compiler, hooks);
@@ -85,6 +86,8 @@ module.exports = class StripesConfigPlugin {
 
     logger.log('writing virtual module...', stripesVirtualModule);
     this.virtualModule.writeModule('node_modules/stripes-config.js', stripesVirtualModule);
+
+    StripesConfigPlugin.getPluginHooks(compiler).afterWrite.call(this.mergedConfig);
   }
 
   processWarnings(compilation, callback) {

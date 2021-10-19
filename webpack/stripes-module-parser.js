@@ -107,14 +107,11 @@ class StripesModuleParser {
   }
 
   // Validates and parses a module's stripes data
-  // One critical aspect of this operation is value of getModule, which is the entry point into each app
-  // This will be modified to a webpack-compatible dynamic import when we implement code-splitting.
   parseStripesConfig(moduleName, packageJson) {
     const { stripes, description, version } = packageJson;
 
     const stripeConfig = _.omit(Object.assign({}, stripes, this.overrideConfig, {
       module: moduleName,
-      getModule: new Function([], `return require('${moduleName}').default;`), // eslint-disable-line no-new-func
       description,
       version,
     }), TOP_LEVEL_ONLY);

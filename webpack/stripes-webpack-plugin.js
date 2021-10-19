@@ -5,6 +5,7 @@ const StripesBrandingPlugin = require('./stripes-branding-plugin');
 const StripesErrorLoggingPlugin = require('./stripes-error-logging-plugin');
 const StripesTranslationsPlugin = require('./stripes-translations-plugin');
 const StripesDuplicatesPlugin = require('./stripes-duplicate-plugin');
+const StripesModulesPlugin = require('./stripes-modules-plugin');
 const logger = require('./logger')('stripesWebpackPlugin');
 
 module.exports = class StripesWebpackPlugin {
@@ -21,6 +22,7 @@ module.exports = class StripesWebpackPlugin {
       new StripesConfigPlugin(this.stripesConfig),
       new StripesTranslationsPlugin(this.stripesConfig),
       new StripesDuplicatesPlugin(this.stripesConfig),
+      new StripesModulesPlugin(this.stripesConfig),
     ];
 
     if (!this.createDll) {

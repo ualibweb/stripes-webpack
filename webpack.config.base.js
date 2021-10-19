@@ -14,11 +14,16 @@ const typescriptLoaderRule = require('./webpack/typescript-loader-rule');
 const specificReact = generateStripesAlias('react');
 
 module.exports = {
-  entry: [
-    '@folio/stripes-components/lib/global.css',
-    '@folio/stripes-core/src/index',
-    //path.join(__dirname, 'src', 'index'),
-  ],
+  entry: {
+    css: '@folio/stripes-components/lib/global.css',
+    stripesConfig: {
+      import: 'stripes-config.js'
+    },
+    index: {
+      dependOn: 'stripesConfig',
+      import: '@folio/stripes-core/src/index'
+    },
+  },
   resolve: {
     alias: {
       'react': specificReact,
