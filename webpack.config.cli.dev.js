@@ -57,7 +57,7 @@ devConfig.plugins = devConfig.plugins.concat([
 // This alias avoids a console warning for react-dom patch
 devConfig.resolve.alias['react-dom'] = '@hot-loader/react-dom';
 devConfig.resolve.alias.process = 'process/browser.js';
-devConfig.resolve.alias['mocha'] = path.resolve('mocha', 'mocha-es2018.js');
+devConfig.resolve.alias['mocha'] = path.resolve('node_modules', 'mocha', 'mocha-es2018.js');
 devConfig.module.rules.push({
   test: /\.css$/,
   use: [
