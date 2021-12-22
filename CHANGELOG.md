@@ -4,6 +4,7 @@
 
 * Update webpack to v5. Refs STRWEB-4.
 * Dependency cleanup. Refs STRWEB-31.
+* Alias Mocha to reduce console noise. Refs STRWEB-32.
 
 ## [2.0.0](https://github.com/folio-org/stripes-webpack/tree/v2.0.0) (2021-09-24)
 [Full Changelog](https://github.com/folio-org/stripes-webpack/compare/v1.3.0...v2.0.0)
