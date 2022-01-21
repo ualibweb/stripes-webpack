@@ -3,30 +3,11 @@
 
 const path = require('path');
 const webpack = require('webpack');
-const postCssImport = require('postcss-import');
-const autoprefixer = require('autoprefixer');
-const postCssCustomProperties = require('postcss-custom-properties');
-const postCssCalc = require('postcss-calc');
-const postCssNesting = require('postcss-nesting');
-const postCssCustomMedia = require('postcss-custom-media');
-const postCssMediaMinMax = require('postcss-media-minmax');
-const postCssColorFunction = require('postcss-color-function');
-const { generateStripesAlias, tryResolve, getSharedStyles } = require('./webpack/module-paths');
+
+const { tryResolve } = require('./webpack/module-paths');
 
 const base = require('./webpack.config.base');
 const cli = require('./webpack.config.cli');
-
-
-const locateCssVariables = () => {
-  const variables = 'lib/variables.css';
-  const localPath = path.join(path.resolve(), variables);
-
-  // check if variables are present locally (in cases when stripes-components is
-  // being built directly) if not look for them via stripes aliases
-  return tryResolve(localPath) ?
-    localPath :
-    path.join(generateStripesAlias('@folio/stripes-components'), variables);
-};
 
 const useBrowserMocha = () => {
   return tryResolve('mocha/mocha-es2018.js') ? 'mocha/mocha-es2018.js' : 'mocha';
@@ -62,45 +43,10 @@ devConfig.plugins = devConfig.plugins.concat([
 devConfig.resolve.alias['react-dom'] = '@hot-loader/react-dom';
 devConfig.resolve.alias.process = 'process/browser.js';
 devConfig.resolve.alias['mocha'] = useBrowserMocha();
-devConfig.module.rules.push({
-  test: /\.css$/,
-  use: [
-    {
-      loader: 'style-loader'
-    },
-    {
-      loader: 'css-loader',
-      options: {
-        modules: {
-          localIdentName: '[local]---[hash:base64:5]',
-        },
-        sourceMap: true,
-        importLoaders: 1,
-      },
-    },
-    {
-      loader: 'postcss-loader',
-      options: {
-        postcssOptions: {
-          plugins: [
-            postCssImport(),
-            autoprefixer(),
-            postCssCustomProperties({
-              preserve: false,
-              importFrom: [locateCssVariables()]
-            }),
-            postCssCalc(),
-            postCssNesting(),
-            postCssCustomMedia(),
-            postCssMediaMinMax(),
-            postCssColorFunction(),
-          ],
-        },
-        sourceMap: true,
-      },
-    },
-  ],
-});
+
+// add the css workflow, handling themes...
+
+
 
 // add 'Buffer' global required for tests/reporting tools.
 devConfig.plugins.push(

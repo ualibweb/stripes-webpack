@@ -15,7 +15,6 @@ const specificReact = generateStripesAlias('react');
 
 module.exports = {
   entry: [
-    '@folio/stripes-components/lib/global.css',
     '@folio/stripes-core/src/index',
     //path.join(__dirname, 'src', 'index'),
   ],

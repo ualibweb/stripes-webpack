@@ -18,14 +18,17 @@ module.exports = function serve(stripesConfig, options) {
   if (typeof stripesConfig.okapi !== 'object') throw new Error('Missing Okapi config');
   if (typeof stripesConfig.okapi.url !== 'string') throw new Error('Missing Okapi URL');
   if (stripesConfig.okapi.url.endsWith('/')) throw new Error('Trailing slash in Okapi URL will prevent Stripes from functioning');
+
   return new Promise((resolve) => {
     logger.log('starting serve...');
     const app = express();
     let config = require('../webpack.config.cli.dev'); // eslint-disable-line global-require
     let developmentConfig = require('../webpack.config.cli.dev.shared.styles');
+    let cssConfig = require('../webpack.config.css');
 
     if (process.env.NODE_ENV === 'development') {
       config = developmentConfig(config, {});
+      config = cssConfig(config, {}, stripesConfig);
     }
 
     config.plugins.push(new StripesWebpackPlugin({ stripesConfig }));
