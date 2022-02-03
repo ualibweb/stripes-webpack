@@ -27,7 +27,7 @@ const locateTheme = (themePath) => {
     themePath : path.join('..', themePath);
 }
 
-const getCSSVariableSettings = (stripesConfig) => {
+const getCSSVariableSettings = (stripesConfig, context) => {
   const settings = {};
   // preserve: false removes css variable entries, leaving only the baked CSS variables.
   if (stripesConfig.legacyCSS) {
@@ -45,7 +45,7 @@ const getCSSVariableSettings = (stripesConfig) => {
 }
 
 
-module.exports = (config, context, stripesConfig) => {
+module.exports = (config, stripesConfig, context) => {
   let cssEntries = [
     locateCssVariables(),
     '@folio/stripes-components/lib/global.css',
@@ -59,6 +59,13 @@ module.exports = (config, context, stripesConfig) => {
     ...cssEntries,
     ...config.entry
   ];
+
+  // since entries will be stripped out by karma-webpack, we have to import CSS via postcss-import (inline them);
+
+  const postCSSEntries = []
+  if (context._.includes('karma')) {
+    postCSSEntries.push(postCssImport());
+  }
 
   config.module.rules.push({
     test: /\.css$/,
@@ -81,6 +88,7 @@ module.exports = (config, context, stripesConfig) => {
         options: {
           postcssOptions: {
             plugins: [
+              ...postCSSEntries,
               autoprefixer(),
               postCssCustomProperties(
                 getCSSVariableSettings(stripesConfig)

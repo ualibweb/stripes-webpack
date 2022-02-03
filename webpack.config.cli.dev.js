@@ -44,10 +44,6 @@ devConfig.resolve.alias['react-dom'] = '@hot-loader/react-dom';
 devConfig.resolve.alias.process = 'process/browser.js';
 devConfig.resolve.alias['mocha'] = useBrowserMocha();
 
-// add the css workflow, handling themes...
-
-
-
 // add 'Buffer' global required for tests/reporting tools.
 devConfig.plugins.push(
   new webpack.ProvidePlugin({

@@ -28,7 +28,7 @@ module.exports = function serve(stripesConfig, options) {
 
     if (process.env.NODE_ENV === 'development') {
       config = developmentConfig(config, {});
-      config = cssConfig(config, {}, stripesConfig);
+      config = cssConfig(config, {}, stripesConfig, options);
     }
 
     config.plugins.push(new StripesWebpackPlugin({ stripesConfig }));
