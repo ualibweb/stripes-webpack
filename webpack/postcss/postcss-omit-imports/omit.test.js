@@ -29,6 +29,11 @@ describe('leaves other imports in place', () => {
   })
 });
 
+describe('leaves other imports in place', () => {
+  it('removes the import statement as expected',() => {
+    run(ex3, ex3Out);
+  })
+});
 
 const ex = `
 /**
@@ -131,3 +136,22 @@ const ex2Out =`
   }
 }
 `;
+
+const ex3 = `
+@import "../variables";
+@import "./styles/padding";
+@import "./styles/margin";
+@import "./styles/flexbox";
+@import "./styles/width";
+@import "./styles/text";
+@import "./styles/float";
+`
+
+const ex3Out = `
+@import "./styles/padding";
+@import "./styles/margin";
+@import "./styles/flexbox";
+@import "./styles/width";
+@import "./styles/text";
+@import "./styles/float";
+`

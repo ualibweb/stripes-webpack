@@ -8,6 +8,7 @@ const postCssCustomMedia = require('postcss-custom-media');
 const postCssMediaMinMax = require('postcss-media-minmax');
 const postCssColorFunction = require('postcss-color-function');
 const postCssOmitImports = require('./webpack/postcss/postcss-omit-imports');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 const { generateStripesAlias, tryResolve } = require('./webpack/module-paths');
 
@@ -27,59 +28,76 @@ const locateTheme = (themePath) => {
     themePath : path.join('..', themePath);
 }
 
-const getCSSVariableSettings = (stripesConfig, context) => {
+const getCSSVariableSettings = (stripesConfig) => {
   const settings = {};
   // preserve: false removes css variable entries, leaving only the baked CSS variables.
   if (stripesConfig.legacyCSS) {
     settings.preserve = false;
   }
 
-  // settings.importFrom = [ locateCssVariables() ];
+  settings.importFrom = [];
 
-  // // imports a theme from stripes-config.
-  // if (stripesConfig.theme) {
-  //   settings.importFrom.push(locateTheme(stripesConfig.theme))
-  // }
+  // imports a theme from stripes-config.
+  if (stripesConfig.theme) {
+    settings.importFrom.push(locateTheme(stripesConfig.theme))
+  }
 
   return settings;
 }
 
+module.exports = (wpconfig, stripesConfig, context) => {
+  let production = false;
 
-module.exports = (config, stripesConfig, context) => {
   let cssEntries = [
     locateCssVariables(),
     '@folio/stripes-components/lib/global.css',
-  ]
-
+  ];
+  let themeEntry = [];
   if (stripesConfig.theme) {
-    cssEntries = [...cssEntries, locateTheme(stripesConfig.theme)]
+    themeEntry = [locateTheme(stripesConfig.theme)];
   }
 
-  config.entry = [
+  wpconfig.entry = [
     ...cssEntries,
-    ...config.entry
+    ...wpconfig.entry,
+    ...themeEntry
   ];
 
-  // since entries will be stripped out by karma-webpack, we have to import CSS via postcss-import (inline them);
+  let postCSSEntries = [postCssOmitImports({ contains: /variables/ })];
 
-  const postCSSEntries = []
+// since entries will be stripped out by karma-webpack, we have to import CSS via postcss-import (inline them);
   if (context._.includes('karma')) {
-    postCSSEntries.push(postCssImport());
+    postCSSEntries = [postCssImport()];
   }
 
-  config.module.rules.push({
+  // default for development... style-loader.
+  let loaderEntries = [
+    {
+      loader: 'style-loader'
+    },
+  ];
+
+  // use CSS extraction for production instead of style-tag injection.
+  if (context._.includes('build')) {
+    production = true;
+    loaderEntries = [{
+      loader: MiniCssExtractPlugin.loader,
+    }];
+
+    wpconfig.plugins.push(new MiniCssExtractPlugin({ filename: 'style.[contenthash].css' }));
+  }
+
+  wpconfig.module.rules.push({
     test: /\.css$/,
     use: [
-      {
-        loader: 'style-loader'
-      },
+      ...loaderEntries,
       {
         loader: 'css-loader',
         options: {
           modules: {
             localIdentName: '[local]---[hash:base64:5]',
           },
-          sourceMap: true,
+          sourceMap: !production,
           importLoaders: 1,
         },
       },
@@ -100,11 +118,12 @@ module.exports = (config, stripesConfig, context) => {
               postCssColorFunction(),
             ],
           },
-          sourceMap: true,
+          sourceMap: !production,
         },
       },
     ],
   });
 
-  return config;
+  // console.log(JSON.stringify(wpconfig, null, 2));
+  return wpconfig;
 }

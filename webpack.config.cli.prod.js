@@ -3,7 +3,7 @@
 
 const path = require('path');
 const webpack = require('webpack');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+
 const CssMinimizerPlugin = require("css-minimizer-webpack-plugin")
 
 const postCssImport = require('postcss-import');
@@ -28,7 +28,6 @@ const prodConfig = Object.assign({}, base, cli, {
 });
 
 prodConfig.plugins = prodConfig.plugins.concat([
-  new MiniCssExtractPlugin({ filename: 'style.[contenthash].css' }),
   new webpack.ProvidePlugin({
     process: 'process/browser.js',
   }),
@@ -49,43 +48,43 @@ prodConfig.optimization = {
   minimize: true,
 }
 
-prodConfig.module.rules.push({
-  test: /\.css$/,
-  use: [
-    {
-      loader: MiniCssExtractPlugin.loader,
-    },
-    {
-      loader: 'css-loader',
-      options: {
-        modules: {
-          localIdentName: '[local]---[hash:base64:5]',
-        },
-        importLoaders: 1,
-      },
-    },
-    {
-      loader: 'postcss-loader',
-      options: {
-        postcssOptions: {
-          plugins: [
-            postCssImport(),
-            autoprefixer(),
-            postCssCustomProperties({
-              preserve: false,
-              importFrom: [path.join(generateStripesAlias('@folio/stripes-components'), 'lib/variables.css')]
-            }),
-            postCssCalc(),
-            postCssNesting(),
-            postCssCustomMedia(),
-            postCssMediaMinMax(),
-            postCssColorFunction(),
-          ],
-        },
-      },
-    },
-  ],
-});
+// prodConfig.module.rules.push({
+//   test: /\.css$/,
+//   use: [
+//     {
+//       loader: MiniCssExtractPlugin.loader,
+//     },
+//     {
+//       loader: 'css-loader',
+//       options: {
+//         modules: {
+//           localIdentName: '[local]---[hash:base64:5]',
+//         },
+//         importLoaders: 1,
+//       },
+//     },
+//     {
+//       loader: 'postcss-loader',
+//       options: {
+//         postcssOptions: {
+//           plugins: [
+//             postCssImport(),
+//             autoprefixer(),
+//             postCssCustomProperties({
+//               preserve: false,
+//               importFrom: [path.join(generateStripesAlias('@folio/stripes-components'), 'lib/variables.css')]
+//             }),
+//             postCssCalc(),
+//             postCssNesting(),
+//             postCssCustomMedia(),
+//             postCssMediaMinMax(),
+//             postCssColorFunction(),
+//           ],
+//         },
+//       },
+//     },
+//   ],
+// });
 
 prodConfig.module.rules.push(
   {
