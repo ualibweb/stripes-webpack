@@ -1,5 +1,10 @@
 # Change history for stripes-webpack
 
+## [3.0.4](https://github.com/folio-org/stripes-webpack/tree/v3.0.4) (2022-03-28)
+[Full Changelog](https://github.com/folio-org/stripes-webpack/compare/v3.0.3...v3.0.4)
+
+* Avoid build logorrhea from `postcss-custom-properties` > `v12.1.4`. Refs STRWEB-43.
+
 ## [3.0.3](https://github.com/folio-org/stripes-webpack/tree/v3.0.3) (2022-02-10)
 [Full Changelog](https://github.com/folio-org/stripes-webpack/compare/v3.0.2...v3.0.3)
 
