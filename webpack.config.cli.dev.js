@@ -63,7 +63,7 @@ devConfig.plugins = devConfig.plugins.concat([
 if (utils.isDevelopment) {
   devConfig.plugins = devConfig.plugins.concat([
     new webpack.HotModuleReplacementPlugin(),
-    new ReactRefreshWebpackPlugin()
+    // new ReactRefreshWebpackPlugin()
   ]);
 }
 
