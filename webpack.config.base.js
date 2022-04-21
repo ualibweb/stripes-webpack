@@ -5,7 +5,8 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
 const { generateStripesAlias } = require('./webpack/module-paths');
-const babelLoaderRule = require('./webpack/babel-loader-rule');
+const swcLoaderRule = require('./webpack/swc-loader-rule');
+
 const typescriptLoaderRule = require('./webpack/typescript-loader-rule');
 
 // React doesn't like being included multiple times as can happen when using
@@ -85,7 +86,7 @@ module.exports = {
   ],
   module: {
     rules: [
-      babelLoaderRule,
+      swcLoaderRule,
       typescriptLoaderRule,
       {
         test: /\.(jpg|jpeg|gif|png|ico)$/,
