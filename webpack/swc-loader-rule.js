@@ -5,7 +5,10 @@ module.exports = {
   use: {
     loader: 'swc-loader',
     options: {
-      parseMap: true,
+      env: {
+        targets: '> 0.25%, not dead'
+      },
+      parseMap: false,
       jsc: {
         parser: {
           jsx: true,
