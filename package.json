@@ -44,7 +44,7 @@
     "csv-loader": "^3.0.3",
     "debug": "^4.0.1",
     "express": "^4.14.0",
-    "favicons": "^6.2.2",
+    "favicons": "^7.0.0-beta.4",
     "favicons-webpack-plugin": "^5.0.2",
     "file-loader": "^6.2.0",
     "handlebars": "^4.7.7",
