@@ -1,6 +1,6 @@
 # Change history for stripes-webpack
 
-## 3.1.0 IN PROGRESS
+## 4.0.0 IN PROGRESS
 
 * Migrate from react-hot-loader to react-refresh. Refs STRWEB-27.
 * `autoprefixer` and `postcss` versions are now compatible. Refs STRWEB-46.
