@@ -106,7 +106,7 @@ function getModulesPath(modules) {
 
       return null;
     })
-    .filter(module => !!module)
+    .filter(module => !!module);
 }
 
 
