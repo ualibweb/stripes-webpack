@@ -1,5 +1,6 @@
 const path = require('path');
 const babelOptions = require('./babel-options');
+const { getModulesPath } = require('./module-paths');
 
 // a space delimited list of strings (typically namespaces) to use in addition
 // to "@folio" to determine if something needs Stripes-flavoured transpilation
@@ -24,21 +25,28 @@ const folioScopeBlacklist = [
 // situations, our dependencies will get their own node_modules directories and
 // while we want to transpile "@folio/ui-users/somefile.js" we don't want to
 // transpile "@folio/ui-users/node_modules/nightmare/somefile.js"
-function babelLoaderTest(fileName) {
+function babelLoaderTest(fileName, modules) {
   const nodeModIdx = fileName.lastIndexOf('node_modules');
+
   if (fileName.endsWith('.js')
-    && (nodeModIdx === -1 || ['@folio', ...extraTranspile].reduce((acc, cur) => (fileName.lastIndexOf(cur) > nodeModIdx) || acc, false))
+    && (nodeModIdx === -1
+      || ['@folio', ...extraTranspile].reduce((acc, cur) => (fileName.lastIndexOf(cur) > nodeModIdx) || acc, false) // is filename in folio namespace
+      || modules.findIndex(moduleName => fileName.includes(moduleName)) !== -1) // if file in stripes config modules
     && (folioScopeBlacklist.findIndex(ignore => fileName.includes(ignore)) === -1)) {
-    return true;
+      return true;
   }
   return false;
 }
 
-module.exports = {
-  test: babelLoaderTest,
-  loader: 'babel-loader',
-  options: {
-    cacheDirectory: true,
-    ...babelOptions,
-  },
+module.exports = (stripesConfig) => {
+  const modules = getModulesPath(stripesConfig.modules);
+
+  return {
+    test: filename => babelLoaderTest(filename, modules),
+    loader: 'babel-loader',
+    options: {
+      cacheDirectory: true,
+      ...babelOptions,
+    },
+  };
 };

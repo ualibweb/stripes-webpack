@@ -85,7 +85,6 @@ module.exports = {
   ],
   module: {
     rules: [
-      babelLoaderRule,
       typescriptLoaderRule,
       {
         test: /\.(jpg|jpeg|gif|png|ico)$/,

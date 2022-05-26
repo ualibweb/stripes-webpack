@@ -1,6 +1,5 @@
 const webpack = require('webpack');
 const path = require('path');
-const nodeObjectHash = require('node-object-hash');
 const express = require('express');
 const webpackDevMiddleware = require('webpack-dev-middleware');
 const webpackHotMiddleware = require('webpack-hot-middleware');
@@ -8,6 +7,7 @@ const connectHistoryApiFallback = require('connect-history-api-fallback');
 const StripesWebpackPlugin = require('./stripes-webpack-plugin');
 const applyWebpackOverrides = require('./apply-webpack-overrides');
 const logger = require('./logger')();
+const buildConfig = require('../webpack.config.cli.dev');
 
 const cwd = path.resolve();
 const platformModulePath = path.join(cwd, 'node_modules');
@@ -21,7 +21,7 @@ module.exports = function serve(stripesConfig, options) {
   return new Promise((resolve) => {
     logger.log('starting serve...');
     const app = express();
-    let config = require('../webpack.config.cli.dev'); // eslint-disable-line global-require
+    let config = buildConfig(stripesConfig);
     let developmentConfig = require('../webpack.config.cli.dev.shared.styles');
 
     if (process.env.NODE_ENV === 'development') {

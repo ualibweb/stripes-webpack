@@ -4,13 +4,15 @@ const StripesWebpackPlugin = require('./stripes-webpack-plugin');
 const AddAssetHtmlPlugin = require('add-asset-html-webpack-plugin');
 const applyWebpackOverrides = require('./apply-webpack-overrides');
 const logger = require('./logger')();
+const buildConfig = require('../webpack.config.cli.prod');
 
 const platformModulePath = path.join(path.resolve(), 'node_modules');
 
 module.exports = function build(stripesConfig, options) {
   return new Promise((resolve, reject) => {
     logger.log('starting build...');
-    let config = require('../webpack.config.cli.prod'); // eslint-disable-line global-require
+
+    let config = buildConfig(stripesConfig);
 
     if (!options.skipStripesBuild) {
       config.plugins.push(new StripesWebpackPlugin({ stripesConfig, createDll: options.createDll }));

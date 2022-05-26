@@ -81,6 +81,35 @@ function locateStripesModule(context, moduleName, alias, ...segments) {
   return foundPath;
 }
 
+/**
+ * Convert modules defined in stripes config into their full root path representation.
+ *
+ * For example modules defined in stripes config:
+ *
+ * modules: { '@folio/users': {}, '@reshare/directory': {} }
+ *
+ * will be converted to:
+ *
+ * modules: ['./node_modules/@folio/users', './node_modules/@reshare/directory']
+ *
+*/
+function getModulesPath(modules) {
+  // turn modules defined
+  return Object
+    .keys(modules)
+    .map(module => {
+      const fullPath = locateStripesModule(process.cwd(), module, {}, 'package.json');
+
+      if (fullPath) {
+        return fullPath.replace('/package.json', '');
+      }
+
+      return null;
+    })
+    .filter(module => !!module)
+}
+
+
 function getSharedStyles(filename) {
   return path.resolve(generateStripesAlias('@folio/stripes-components'), filename + ".css");
 }
@@ -90,4 +119,5 @@ module.exports = {
   generateStripesAlias,
   getSharedStyles,
   locateStripesModule,
+  getModulesPath,
 };

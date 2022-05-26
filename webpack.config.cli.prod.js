@@ -15,109 +15,116 @@ const postCssCustomMedia = require('postcss-custom-media');
 const postCssMediaMinMax = require('postcss-media-minmax');
 const postCssColorFunction = require('postcss-color-function');
 const { generateStripesAlias, getSharedStyles } = require('./webpack/module-paths');
+const babelLoaderRule = require('./webpack/babel-loader-rule');
 
 const base = require('./webpack.config.base');
 const cli = require('./webpack.config.cli');
 
-const prodConfig = Object.assign({}, base, cli, {
-  mode: 'production',
-  infrastructureLogging: {
-    appendOnly: true,
-    level: 'warn',
+const buildConfig = (stripesConfig) => {
+  const prodConfig = Object.assign({}, base, cli, {
+    mode: 'production',
+    infrastructureLogging: {
+      appendOnly: true,
+      level: 'warn',
+    }
+  });
+
+  prodConfig.plugins = prodConfig.plugins.concat([
+    new MiniCssExtractPlugin({ filename: 'style.[contenthash].css' }),
+    new webpack.ProvidePlugin({
+      process: 'process/browser.js',
+    }),
+  ]);
+
+  prodConfig.resolve.alias = {
+    ...prodConfig.resolve.alias,
+    "stcom-interactionStyles": getSharedStyles("lib/sharedStyles/interactionStyles"),
+    "stcom-variables": getSharedStyles("lib/variables"),
+  };
+
+  prodConfig.optimization = {
+    mangleWasmImports: true,
+    minimizer: [
+    '...', // in webpack@5 we can use the '...' syntax to extend existing minimizers
+      new CssMinimizerPlugin(),
+    ],
+    minimize: true,
   }
-});
 
-prodConfig.plugins = prodConfig.plugins.concat([
-  new MiniCssExtractPlugin({ filename: 'style.[contenthash].css' }),
-  new webpack.ProvidePlugin({
-    process: 'process/browser.js',
-  }),
-]);
+  prodConfig.module.rules.push(babelLoaderRule(stripesConfig));
 
-prodConfig.resolve.alias = {
-  ...prodConfig.resolve.alias,
-  "stcom-interactionStyles": getSharedStyles("lib/sharedStyles/interactionStyles"),
-  "stcom-variables": getSharedStyles("lib/variables"),
-};
-
-prodConfig.optimization = {
-  mangleWasmImports: true,
-  minimizer: [
-   '...', // in webpack@5 we can use the '...' syntax to extend existing minimizers
-    new CssMinimizerPlugin(),
-  ],
-  minimize: true,
-}
-
-prodConfig.module.rules.push({
-  test: /\.css$/,
-  use: [
-    {
-      loader: MiniCssExtractPlugin.loader,
-    },
-    {
-      loader: 'css-loader',
-      options: {
-        modules: {
-          localIdentName: '[local]---[hash:base64:5]',
-        },
-        importLoaders: 1,
-      },
-    },
-    {
-      loader: 'postcss-loader',
-      options: {
-        postcssOptions: {
-          plugins: [
-            postCssImport(),
-            autoprefixer(),
-            postCssCustomProperties({
-              preserve: false,
-              importFrom: [path.join(generateStripesAlias('@folio/stripes-components'), 'lib/variables.css')]
-            }),
-            postCssCalc(),
-            postCssNesting(),
-            postCssCustomMedia(),
-            postCssMediaMinMax(),
-            postCssColorFunction(),
-          ],
-        },
-      },
-    },
-  ],
-});
-
-prodConfig.module.rules.push(
-  {
-    test: /\.svg$/,
+  prodConfig.module.rules.push({
+    test: /\.css$/,
     use: [
       {
-        loader: 'file-loader?name=img/[path][name].[contenthash].[ext]',
+        loader: MiniCssExtractPlugin.loader,
+      },
+      {
+        loader: 'css-loader',
         options: {
-          esModule: false,
+          modules: {
+            localIdentName: '[local]---[hash:base64:5]',
+          },
+          importLoaders: 1,
         },
       },
       {
-        loader: 'svgo-loader',
+        loader: 'postcss-loader',
         options: {
-          plugins: [
-            { removeTitle: true },
-            { convertColors: { shorthex: false } },
-            { convertPathData: false }
-          ]
+          postcssOptions: {
+            plugins: [
+              postCssImport(),
+              autoprefixer(),
+              postCssCustomProperties({
+                preserve: false,
+                importFrom: [path.join(generateStripesAlias('@folio/stripes-components'), 'lib/variables.css')]
+              }),
+              postCssCalc(),
+              postCssNesting(),
+              postCssCustomMedia(),
+              postCssMediaMinMax(),
+              postCssColorFunction(),
+            ],
+          },
+        },
+      },
+    ],
+  });
+
+  prodConfig.module.rules.push(
+    {
+      test: /\.svg$/,
+      use: [
+        {
+          loader: 'file-loader?name=img/[path][name].[contenthash].[ext]',
+          options: {
+            esModule: false,
+          },
+        },
+        {
+          loader: 'svgo-loader',
+          options: {
+            plugins: [
+              { removeTitle: true },
+              { convertColors: { shorthex: false } },
+              { convertPathData: false }
+            ]
+          }
         }
-      }
-    ]
-  },
-);
+      ]
+    },
+  );
 
-// Remove all data-test or data-test-* attributes
-const babelLoaderConfig = prodConfig.module.rules.find(rule => rule.loader === 'babel-loader');
+  // Remove all data-test or data-test-* attributes
+  const babelLoaderConfig = prodConfig.module.rules.find(rule => rule.loader === 'babel-loader');
 
-babelLoaderConfig.options.plugins = (babelLoaderConfig.options.plugins || []).concat([
-  [require.resolve('babel-plugin-remove-jsx-attributes'), {
-    patterns: ['^data-test.*$']
-  }]
-]);
+  babelLoaderConfig.options.plugins = (babelLoaderConfig.options.plugins || []).concat([
+    [require.resolve('babel-plugin-remove-jsx-attributes'), {
+      patterns: ['^data-test.*$']
+    }]
+  ]);
 
-module.exports = prodConfig;
+  return prodConfig;
+}
+
+module.exports = buildConfig;
