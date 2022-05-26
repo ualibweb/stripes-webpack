@@ -45,7 +45,6 @@ module.exports = class StripesConfigPlugin {
     const enabledModules = this.options.modules;
     logger.log('enabled modules:', enabledModules);
     const { config, metadata, icons, stripesDeps, warnings } = stripesModuleParser.parseAllModules(enabledModules, compiler.context, compiler.options.resolve.alias);
-
     this.mergedConfig = Object.assign({}, this.options, { modules: config });
     this.metadata = metadata;
     this.icons = icons;
