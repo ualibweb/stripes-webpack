@@ -41,11 +41,10 @@ const buildConfig = (stripesConfig) => {
   const devConfig = Object.assign({}, base, cli, {
     devtool: 'inline-source-map',
     mode: 'development',
-    cache: false,
-    // cache: {
-    //   type: 'filesystem',
-    //   name: 'FOLIOCache',
-    // },
+    cache: {
+      type: 'filesystem',
+      name: 'FOLIOCache',
+    },
     target: 'web',
     infrastructureLogging: {
       appendOnly: true,
