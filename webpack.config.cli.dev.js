@@ -50,11 +50,8 @@ const devConfig = Object.assign({}, base, cli, {
 
 // Override filename to remove the hash in development due to memory issues (STCOR-296)
 devConfig.output.filename = 'bundle.js';
-devConfig.entry = [
-  'webpack-hot-middleware/client',
-  '@folio/stripes-components/lib/global.css',
-  '@folio/stripes-core/src/index',
-];
+
+devConfig.entry.unshift('webpack-hot-middleware/client');
 
 devConfig.plugins = devConfig.plugins.concat([
   new webpack.ProvidePlugin({
