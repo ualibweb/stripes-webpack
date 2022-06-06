@@ -7,7 +7,7 @@
     "registry": "https://repository.folio.org/repository/npm-folio/"
   },
   "scripts": {
-    "test": "mocha --opts test/mocha.opts './test/webpack/**/*.js'"
+    "test": "mocha --opts ./test/mocha.opts './test/webpack/**/*.js'"
   },
   "engines": {
     "node": ">=12.0.0"
