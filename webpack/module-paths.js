@@ -82,33 +82,69 @@ function locateStripesModule(context, moduleName, alias, ...segments) {
 }
 
 /**
- * Convert modules defined in stripes config into their full root path representation.
+ * Convert dependencies defined in "stripes.stripesDeps" in package.json
+ * into their full path representation.
+ *
+ * For example dependencies defined as:
+ *
+ * "stripesDeps": [
+    "@reshare/stripes-reshare",
+  ],
+ *
+ * will be converted into:
+ *
+ * [
+ *  './node_modules/@reshare/stripes-reshare'
+ * ]
+ *
+*/
+function getStripesDepsPaths(stripesDeps) {
+  if (!stripesDeps) return null;
+
+  return stripesDeps.map(dep => {
+    const path = locateStripesModule(process.cwd(), dep, {}, 'package.json');
+    return path ? path.replace('/package.json', '') : null;
+  });
+}
+
+/**
+ * Convert modules defined in stripes config into their full path representation.
+ * The conversion will happen for all modules found in a stripes config
  *
  * For example modules defined in stripes config:
  *
  * modules: { '@folio/users': {}, '@reshare/directory': {} }
  *
- * will be converted to:
+ * will be converted into:
  *
- * modules: ['./node_modules/@folio/users', './node_modules/@reshare/directory']
+ * [
+ *  './node_modules/@folio/users',
+ *  './node_modules/@reshare/directory',
+ * ]
  *
 */
-function getModulesPath(modules) {
-  // turn modules defined
+function getModulesPaths(modules) {
   return Object
     .keys(modules)
-    .map(module => {
-      const fullPath = locateStripesModule(process.cwd(), module, {}, 'package.json');
+    .flatMap(module => {
+      const packageJsonPath = locateStripesModule(process.cwd(), module, {}, 'package.json');
 
-      if (fullPath) {
-        return fullPath.replace('/package.json', '');
+      if (packageJsonPath) {
+        const modulePaths = [packageJsonPath.replace('/package.json', '')];
+        const packageJson = require(packageJsonPath);
+        const stripesDeps = getStripesDepsPaths(packageJson?.stripes?.stripesDeps);
+
+        if (stripesDeps) {
+          modulePaths.push(...stripesDeps);
+        }
+
+        return modulePaths
       }
 
       return null;
     })
     .filter(module => !!module);
 }
-
 
 function getSharedStyles(filename) {
   return path.resolve(generateStripesAlias('@folio/stripes-components'), filename + ".css");
@@ -119,5 +155,5 @@ module.exports = {
   generateStripesAlias,
   getSharedStyles,
   locateStripesModule,
-  getModulesPath,
+  getModulesPaths,
 };

@@ -1,6 +1,6 @@
 const path = require('path');
 const babelOptions = require('./babel-options');
-const { getModulesPath } = require('./module-paths');
+const { getModulesPaths } = require('./module-paths');
 
 // a space delimited list of strings (typically namespaces) to use in addition
 // to "@folio" to determine if something needs Stripes-flavoured transpilation
@@ -39,10 +39,10 @@ function babelLoaderTest(fileName, modules) {
 }
 
 module.exports = (stripesConfig) => {
-  const modules = getModulesPath(stripesConfig.modules);
+  const stripesDepsPaths = getModulesPaths(stripesConfig.modules);
 
   return {
-    test: filename => babelLoaderTest(filename, modules),
+    test: filename => babelLoaderTest(filename, stripesDepsPaths),
     loader: 'babel-loader',
     options: {
       cacheDirectory: true,
