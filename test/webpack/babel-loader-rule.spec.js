@@ -4,7 +4,7 @@ const babelLoaderRule = require('../../webpack/babel-loader-rule');
 describe('The babel-loader-rule', function () {
   describe('test condition function', function () {
     beforeEach(function () {
-      this.sut = babelLoaderRule.test;
+      this.sut = babelLoaderRule({ modules: {} }).test;
     });
 
     it('selects files for @folio scoped node_modules', function () {
