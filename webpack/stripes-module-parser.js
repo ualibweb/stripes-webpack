@@ -101,19 +101,28 @@ class StripesModuleParser {
     return {
       name: this.nameOnly,
       actsAs,
-      config: this.config || this.parseStripesConfig(this.moduleName, this.packageJson),
+      config: this.config || this.parseStripesConfig(this.moduleName, this.packageJson, actsAs),
       metadata: this.metadata || this.parseStripesMetadata(this.packageJson),
     };
   }
 
   // Validates and parses a module's stripes data
-  parseStripesConfig(moduleName, packageJson) {
+  parseStripesConfig(moduleName, packageJson, actsAs = []) {
     const { stripes, description, version } = packageJson;
+    const isHandler = actsAs.includes('handler');
+
+    // Do not lazy load handlers
+    // more details in https://issues.folio.org/browse/STRWEB-52
+    const getModule = isHandler ?
+      new Function([], `return require('${moduleName}').default;`) :
+      new Function([], `
+        const { lazy } = require('react');
+        return lazy(() => import(/* webpackChunkName: "${moduleName}" */ '${moduleName}'));`
+      );
+
     const stripesConfig = _.omit(Object.assign({}, stripes, this.overrideConfig, {
       module: moduleName,
-      getModule: new Function([], `
-        const { lazy } = require('react');
-        return lazy(() => import(/* webpackChunkName: "${moduleName}" */ '${moduleName}'));`),
+      getModule,
       description,
       version,
     }), TOP_LEVEL_ONLY);

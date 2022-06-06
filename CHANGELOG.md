@@ -6,6 +6,7 @@
 * `autoprefixer` and `postcss` versions are now compatible. Refs STRWEB-46.
 * Migrate to current `add-asset-html-plugin` to avoid CVE-2020-28469. Refs STRWEB-28.
 * Omit last traces of (unused) `react-githubish-mentions`. Refs STRWEB-41.
+* Do not lazy load handlers. Refs STRWEB-52.
 
 ## [3.0.3](https://github.com/folio-org/stripes-webpack/tree/v3.0.3) (2022-02-10)
 [Full Changelog](https://github.com/folio-org/stripes-webpack/compare/v3.0.2...v3.0.3)
