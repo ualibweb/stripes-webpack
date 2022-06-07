@@ -123,11 +123,13 @@ function locatePackageJsonPath(module) {
 */
 function getStripesDepsPaths(packageJsonPath) {
   const packageJson = require(packageJsonPath);
-  const stripesDeps = packageJson?.stripes?.stripesDeps;
+  const stripes = packageJson.stripes || {};
 
-  if (!stripesDeps) {
+  if (!stripes.stripesDeps) {
     return null;
   }
+
+  const stripesDeps = stripes.stripesDeps;
 
   return stripesDeps.map(dep => {
     const path = locatePackageJsonPath(dep);
