@@ -110,12 +110,10 @@ class StripesModuleParser {
   parseStripesConfig(moduleName, packageJson, actsAs = []) {
     const { stripes, description, version } = packageJson;
     const isHandler = actsAs.includes('handler');
-    const isPlugin = actsAs.includes('plugin');
 
-    // Do not lazy load handlers and plugins
+    // Do not lazy load handlers
     // more details in https://issues.folio.org/browse/STRWEB-52
-    // and https://issues.folio.org/browse/STRWEB-53
-    const getModule = (isHandler || isPlugin) ?
+    const getModule = isHandler ?
       new Function([], `return require('${moduleName}').default;`) :
       new Function([], `
         const { lazy } = require('react');
