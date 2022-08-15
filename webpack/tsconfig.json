@@ -3,9 +3,10 @@
     "noImplicitAny": true,
     "esModuleInterop": true,
     "jsx": "react",
-    "lib": ["esnext"],
-    "module": "es6",
-    "moduleResolution": "node"
+    "lib": ["esnext", "dom"],
+    "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true
   },
-  "include": ["../../**/*.ts"]
+  "include": ["../../**/*.ts", "../../**/*.tsx"]
 }
