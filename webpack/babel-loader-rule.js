@@ -26,7 +26,7 @@ const folioScopeBlacklist = [
 // transpile "@folio/ui-users/node_modules/nightmare/somefile.js"
 function babelLoaderTest(fileName) {
   const nodeModIdx = fileName.lastIndexOf('node_modules');
-  if (fileName.endsWith('.js')
+  if (/\.(j|t)sx?$/.test(fileName)
     && (nodeModIdx === -1 || ['@folio', ...extraTranspile].reduce((acc, cur) => (fileName.lastIndexOf(cur) > nodeModIdx) || acc, false))
     && (folioScopeBlacklist.findIndex(ignore => fileName.includes(ignore)) === -1)) {
     return true;

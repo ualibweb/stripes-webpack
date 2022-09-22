@@ -29,5 +29,6 @@ module.exports = {
     '@babel/plugin-proposal-throw-expressions',
     '@babel/plugin-syntax-import-meta',
     utils.isDevelopment && require.resolve('react-refresh/babel'),
+    ['babel-plugin-typescript-to-proptypes', { comments: utils.isDevelopment }],
   ].filter(Boolean),
 };
