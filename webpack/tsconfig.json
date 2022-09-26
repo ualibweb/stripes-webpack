@@ -8,5 +8,10 @@
     "moduleResolution": "node",
     "resolveJsonModule": true
   },
-  "include": ["../../**/*.ts", "../../**/*.tsx"]
+  "include": [
+    "../../**/*.ts",
+    "../../**/*.tsx",
+    "../../../../**/*.ts",
+    "../../../../**/*.tsx"
+  ]
 }
