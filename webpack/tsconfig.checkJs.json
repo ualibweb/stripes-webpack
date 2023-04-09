@@ -1,16 +1,22 @@
 {
   "compilerOptions": {
-    "noImplicitAny": true,
+    "allowJs": true,
+    "checkJs": true,
+    "noImplicitAny": false,
     "esModuleInterop": true,
     "jsx": "react",
     "lib": ["esnext", "dom"],
     "module": "esnext",
     "moduleResolution": "node",
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+
+    "noEmit": true
   },
   "include": [
     "../../**/*.ts",
     "../../**/*.tsx",
+    "../../**/*.js",
+    "../../**/*.jsx",
     "node_modules/@folio/**/*.ts",
     "node_modules/@folio/**/*.tsx",
     "../node_modules/@folio/**/*.ts",

@@ -1,0 +1,39 @@
+{
+  "compilerOptions": {
+    "noImplicitAny": true,
+    "jsx": "react",
+    "lib": ["esnext", "dom"],
+    "module": "commonjs",
+    "target": "esnext",
+
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+
+    "noEmit": true
+  },
+  "include": [
+    "../../**/*.ts",
+    "../../**/*.tsx",
+    "node_modules/@folio/**/*.ts",
+    "node_modules/@folio/**/*.tsx",
+    "../node_modules/@folio/**/*.ts",
+    "../node_modules/@folio/**/*.tsx",
+    "../../node_modules/@folio/**/*.ts",
+    "../../node_modules/@folio/**/*.tsx"
+  ],
+  "exclude": [
+    "../../**/*.test.ts",
+    "../../**/*.test.tsx",
+    "../../**/test/**/*.ts",
+    "../../**/test/**/*.tsx",
+    "node_modules/@folio/**/*.test.ts",
+    "node_modules/@folio/**/*.test.tsx",
+    "node_modules/@folio/**/test/**/*.ts",
+    "node_modules/@folio/**/test/**/*.tsx",
+    "../node_modules/@folio/**/test/**/*.ts",
+    "../node_modules/@folio/**/test/**/*.tsx",
+    "../../node_modules/@folio/**/test/**/*.ts",
+    "../../node_modules/@folio/**/test/**/*.tsx"
+  ]
+}

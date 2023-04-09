@@ -41,7 +41,7 @@ module.exports = (modulePaths) => {
 
   return {
     loader: 'babel-loader',
-    test: /\.js$/,
+    test: /\.(j|t)sx?$/,
     include: function(modulePath) {
       // exclude empty modules
       if (!modulePath) {
